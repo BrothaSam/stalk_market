@@ -21,12 +21,12 @@ module.exports = {
         );
       } else {
         message.reply(
-          `you did not provide the proper arguments.\nCorrect usage is "${prefix}${this.name} ${this.usage}".`
+          `you did not provide the proper arguments.\nCorrect usage is \`${prefix}${this.name} ${this.usage}\`.`
         );
       }
     } else {
       message.reply(
-        `you did not provide the proper arguments.\nCorrect usage is "${prefix}${this.name} ${this.usage}".`
+        `you did not provide the proper arguments.\nCorrect usage is \`${prefix}${this.name} ${this.usage}\`.`
       );
     }
   },
