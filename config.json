@@ -9,5 +9,5 @@
     "friday",
     "saturday"
   ],
-  "meridiem": ["am", "pm"]
+  "period": ["am", "pm"]
 }
