@@ -1,12 +1,12 @@
-const { days, period } = require('../config.json');
+const { period } = require('../config.json');
 const { improperArguments } = require('../default-responses');
-
+const moment = require('moment');
 module.exports = {
   name: 'save-price',
   description:
-    'Saves the price of a single turnip to the database. User can provide optional day and period.',
+    'Saves the price of a single turnip to the database. User can provide optional date and period.',
   args: true,
-  usage: '<price> [<day> <am/pm>]',
+  usage: '<price> [<date (ISO format)> <am/pm>]',
   execute(message, args) {
     const price = args[0];
 
@@ -14,11 +14,11 @@ module.exports = {
       const price = args[0];
       message.reply(`your turnip price of ${price} bells has been recorded!`);
     } else if (args.length === 3) {
-      if (days.includes(args[1]) && period.includes(args[2])) {
-        const day = args[1].charAt(0).toUpperCase() + args[1].slice(1);
-        const period = args[2].toUpperCase();
+      if (moment(args[1], moment.ISO_8601).isValid() && period.includes(args[2])) {
+        const date = moment(args[1]).format('YYYY-MM-DD')
+        const period = args[2];
         message.reply(
-          `your turnip price of ${price} bells, for ${day} ${period} has been recorded!`
+          `your turnip price of ${price} bells, for ${date} ${period} has been recorded!`
         );
       } else {
         message.reply(improperArguments(this.name, this.usage));

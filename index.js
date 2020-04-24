@@ -3,7 +3,13 @@ const fs = require('fs');
 const { prefix } = require('./config.json');
 require('dotenv').config();
 const { improperArguments } = require('./default-responses');
+const moment = require('moment');
 
+console.log(moment("2020-12-26").week());
+console.log(moment("2021-01-01").week());
+console.log(moment("2020-04-19").day())
+
+console.log(moment().utc().format())
 
 const client = new Discord.Client();
 
@@ -44,7 +50,7 @@ client.on('message', (message) => {
   console.log(message.content);
 
   if (command.args && !args.length) {
-    message.reply(improperArguments(command.name, command.usage));
+    return message.reply(improperArguments(command.name, command.usage));
   }
 
   if (!cooldowns.has(command.name)) {
