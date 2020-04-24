@@ -1,4 +1,5 @@
-const { prefix, days, meridiem } = require('../config.json');
+const { days, meridiem } = require('../config.json');
+const { improperArguments } = require('../default-responses');
 
 module.exports = {
   name: 'save-price',
@@ -20,14 +21,10 @@ module.exports = {
           `your turnip price of ${price} bells, for ${day} ${meridiem} has been recorded!`
         );
       } else {
-        message.reply(
-          `you did not provide the proper arguments.\nCorrect usage is \`${prefix}${this.name} ${this.usage}\`.`
-        );
+        message.reply(improperArguments(this.name, this.usage));
       }
     } else {
-      message.reply(
-        `you did not provide the proper arguments.\nCorrect usage is \`${prefix}${this.name} ${this.usage}\`.`
-      );
+      message.reply(improperArguments(this.name, this.usage));
     }
   },
 };

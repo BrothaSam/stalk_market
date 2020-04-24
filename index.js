@@ -2,6 +2,8 @@ const Discord = require('discord.js');
 const fs = require('fs');
 const { prefix } = require('./config.json');
 require('dotenv').config();
+const { improperArguments } = require('./default-responses');
+
 
 const client = new Discord.Client();
 
@@ -42,9 +44,7 @@ client.on('message', (message) => {
   console.log(message.content);
 
   if (command.args && !args.length) {
-    return message.reply(
-      `you didn't provide any of the required arguments!\nCorrect usage is "${prefix}${command.name} ${command.usage}".`
-    );
+    message.reply(improperArguments(command.name, command.usage));
   }
 
   if (!cooldowns.has(command.name)) {
@@ -75,7 +75,7 @@ client.on('message', (message) => {
     command.execute(message, args);
   } catch (err) {
     console.error(err);
-    message.reply(`There was an error trying to execute "${message.content}"`);
+    message.reply(`there was an error trying to execute "${message.content}".`);
   }
 });
 
