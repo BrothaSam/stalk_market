@@ -7,13 +7,8 @@ const models = require('./models');
 require('dotenv').config();
 
 models.sequelize
-  .sync()
+  .sync({ force: true })
   .then(() => {
-    console.log(moment('2020-12-26').week());
-    console.log(moment('2021-01-01').week());
-    console.log(moment('2020-04-19').day());
-    console.log(moment().utc().format());
-
     const client = new Discord.Client();
 
     client.commands = new Discord.Collection();
@@ -101,7 +96,7 @@ models.sequelize
     client.login(process.env.TOKEN);
   })
   .catch((err) => {
-    console.error('Failed to initialize database.');
+    console.error('Failed to start server: ', err);
   });
 
 process.on('unhandledRejection', (error) => {
