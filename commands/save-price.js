@@ -1,4 +1,4 @@
-const { period } = require('../config.json');
+const { period } = require('../constants.json');
 const { improperArguments } = require('../default-responses');
 const moment = require('moment');
 module.exports = {

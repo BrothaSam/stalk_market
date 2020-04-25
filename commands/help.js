@@ -1,4 +1,4 @@
-const { prefix } = require('../config.json');
+const { prefix } = require('../constants.json');
 const { improperArguments } = require('../default-responses');
 
 module.exports = {
