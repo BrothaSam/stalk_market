@@ -38,9 +38,13 @@ module.exports = {
             command.usage ? ` ${command.usage}` : ''
           }\``
         );
+        if (command.requiresTimezone) {
+          data.push(
+            `**Requires Timezone:** Requires user to have a saved timezone. See \`!help set-tz\` for more information`
+          );
+        }
         if (command.cooldown)
           data.push(`**Cooldown:** ${command.cooldown || 3} second(s)`);
-
         message.channel.send(data, { split: true });
       }
     }

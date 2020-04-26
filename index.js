@@ -7,7 +7,7 @@ const models = require('./models');
 require('dotenv').config();
 
 models.sequelize
-  .sync()
+  .sync({ force: process.env.NODE_ENV === 'development' ? true : false })
   .then(() => {
     const client = new Discord.Client();
     const cooldowns = new Discord.Collection();
@@ -77,7 +77,27 @@ models.sequelize
 
       try {
         console.log(message.content);
-        command.execute(message, args);
+        if (command.requiresTimezone) {
+          models.user_settings
+            .findByPk(message.author.id)
+            .then((res) => {
+              if (res === null) {
+                return message.reply(
+                  'you must set your timezone before saving prices. Use `!help set-tz` to learn more!'
+                );
+              }
+              const timezone = res.dataValues.timezone;
+              command.execute(message, args, timezone);
+            })
+            .catch((err) => {
+              console.error(err);
+              return message.reply(
+                `\`${message.content}\` requires you to have a saved timezone, and we had trouble retrieving that. Please try again later.`
+              );
+            });
+        } else {
+          command.execute(message, args);
+        }
       } catch (err) {
         console.error(err);
         message.reply(
@@ -90,12 +110,12 @@ models.sequelize
       console.error('A websocket connection encountered an error:', error);
     });
 
+    process.on('unhandledRejection', (error) => {
+      console.error('Unhandled promise rejection:', error);
+    });
+
     client.login(process.env.TOKEN);
   })
   .catch((err) => {
     console.error('Failed to start server: ', err);
   });
-
-process.on('unhandledRejection', (error) => {
-  console.error('Unhandled promise rejection:', error);
-});
