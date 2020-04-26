@@ -9,8 +9,6 @@ let db = {};
 
 const sequelize = new Sequelize(config);
 
-console.log(config.storage)
-
 fs.readdirSync(__dirname)
   .filter((file) => {
     return file.indexOf('.') !== 0 && file !== basename && file.endsWith('.js');
