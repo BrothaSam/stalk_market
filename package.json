@@ -9,7 +9,15 @@
   "author": "BrothaSam#8700",
   "license": "ISC",
   "dependencies": {
+    "ascii-table": "0.0.9",
     "discord.js": "^12.2.0",
-    "eslint": "^6.8.0"
+    "dotenv": "^8.2.0",
+    "moment": "^2.24.0",
+    "moment-timezone": "^0.5.28",
+    "sequelize": "^5.21.7",
+    "sqlite3": "^4.1.1"
+  },
+  "devDependencies": {
+    "prettier": "2.0.5"
   }
 }
