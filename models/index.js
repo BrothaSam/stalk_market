@@ -4,10 +4,11 @@ const Sequelize = require('sequelize');
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.js')[env];
+require('dotenv').config();
 
 let db = {};
 
-const sequelize = new Sequelize(config);
+const sequelize = new Sequelize(process.env.DATABASE_URL, config);
 
 fs.readdirSync(__dirname)
   .filter((file) => {
