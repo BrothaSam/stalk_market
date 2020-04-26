@@ -44,11 +44,11 @@ function upsert(author_id, price, message, userDefinedDate, userDefinedPeriod) {
       .tz(userDefinedDate ? userDefinedDate : message.createAt, timezone)
       .format();
     console.log(dateTime);
-    console.log(moment(dateTime).hour());
-    console.log(moment(dateTime).hour() < 12);
+    console.log(moment(dateTime).tz(timezone).hour());
+    console.log(moment(dateTime).tz(timezone).hour() < 12);
     const period = userDefinedPeriod
       ? userDefinedPeriod
-      : moment(dateTime).hour() < 12
+      : moment(dateTime).tz(timezone).hour() < 12
       ? 'am'
       : 'pm';
     const date = moment.tz(dateTime, timezone).format('YYYY-MM-DD');
