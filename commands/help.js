@@ -25,7 +25,6 @@ module.exports = {
         commands.find((c) => c.aliases && c.aliases.includes(name));
 
       if (!command) {
-        console.log(this.name);
         message.reply(improperArguments(this.name, this.usage));
       } else {
         data.push(`**Name:** ${command.name}`);
