@@ -38,21 +38,14 @@ function upsert(author_id, price, message, userDefinedDate, userDefinedPeriod) {
       );
     }
     const timezone = res.dataValues.timezone;
-    console.log(timezone);
-    console.log(userDefinedDate, userDefinedDate);
     const dateTime = moment
-      .tz(userDefinedDate ? userDefinedDate : message.createAt, timezone)
+      .tz(userDefinedDate || message.createAt, timezone)
       .format();
-    console.log(dateTime);
-    console.log(moment(dateTime).tz(timezone).hour());
-    console.log(moment(dateTime).tz(timezone).hour() < 12);
-    const period = userDefinedPeriod
-      ? userDefinedPeriod
-      : moment(dateTime).tz(timezone).hour() < 12
-      ? 'am'
-      : 'pm';
+    const period =
+      userDefinedPeriod || moment.tz(dateTime, timezone).hour() < 12
+        ? 'am'
+        : 'pm';
     const date = moment.tz(dateTime, timezone).format('YYYY-MM-DD');
-    console.log(date, period);
     models.sell_prices
       .upsert({
         author_id,
