@@ -48,8 +48,6 @@ models.sequelize
 
       if (!command) return;
 
-      console.log(message.content);
-
       if (command.args && !args.length) {
         return message.reply(improperArguments(command.name, command.usage));
       }

@@ -1,11 +1,11 @@
 module.exports = (sequelize, DataTypes) => {
-  const Price = sequelize.define('prices', {
+  const SellPrice = sequelize.define('sell_prices', {
     author_id: {
       type: DataTypes.TEXT,
       primaryKey: true,
     },
     date: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       primaryKey: true,
     },
     period: {
@@ -14,9 +14,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     price: {
       type: DataTypes.INTEGER,
-      primaryKey: true,
+      allowNull: false,
     },
   });
 
-  return Price;
+  return SellPrice;
 };
