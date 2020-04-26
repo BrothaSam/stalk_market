@@ -27,7 +27,7 @@ models.sequelize
   .sync(/*{ force: true }*/)
   .then(() => {
     //DEV ONLY
-/*     models.user_settings
+    /*     models.user_settings
       .upsert({
         author_id: '551924397347176550',
         timezone: 'America/Chicago',
@@ -113,6 +113,7 @@ models.sequelize
       setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 
       try {
+        console.log(message.content);
         command.execute(message, args);
       } catch (err) {
         console.error(err);
