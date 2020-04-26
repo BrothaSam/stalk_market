@@ -6,6 +6,8 @@ const moment = require('moment');
 const models = require('./models');
 require('dotenv').config();
 
+console.log(process.env);
+
 const tempSell = [
   { date: '2020-04-19', period: 'am', price: 1 },
   { date: '2020-04-18', period: 'pm', price: 2 },

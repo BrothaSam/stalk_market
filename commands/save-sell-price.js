@@ -47,6 +47,7 @@ function upsert(author_id, price, message, userDefinedDate, userDefinedPeriod) {
       ? 'am'
       : 'pm';
     const date = moment.tz(dateTime, timezone).format('YYYY-MM-DD');
+    console.log(date, period);
     models.sell_prices
       .upsert({
         author_id,
