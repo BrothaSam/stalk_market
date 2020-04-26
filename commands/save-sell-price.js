@@ -8,19 +8,20 @@ module.exports = {
   description:
     'Saves the sell price offered on your island for a given day and period. If only a price is provided then the date and period is assumed to be current time based on your set timezone. Optional date `YYYY-MM-DD` and period `am/pm` can be provided by the user.',
   args: true,
+  requiresTimezone: true,
   usage: '<price> [<date> <period>]',
-  execute(message, args) {
+  execute(message, args, timezone) {
     const author_id = message.author.id;
     const price = args[0];
 
     if (args.length === 1 && !isNaN(price)) {
-      upsert(author_id, price, message, null, null);
+      upsert(author_id, price, message, timezone, null, null);
     } else if (args.length === 3) {
       if (
         moment(args[1], moment.ISO_8601).isValid() &&
         periods.includes(args[2])
       ) {
-        upsert(author_id, price, message, args[1], args[2]);
+        upsert(author_id, price, message, timezone, args[1], args[2]);
       } else {
         return message.reply(improperArguments(this.name, this.usage));
       }
@@ -30,39 +31,38 @@ module.exports = {
   },
 };
 
-function upsert(author_id, price, message, userDefinedDate, userDefinedPeriod) {
-  models.user_settings.findByPk(author_id).then((res) => {
-    if (res === null) {
+function upsert(
+  author_id,
+  price,
+  message,
+  timezone,
+  userDefinedDate,
+  userDefinedPeriod
+) {
+  const dateTime = moment
+    .tz(userDefinedDate || message.createAt, timezone)
+    .format();
+  const period =
+    userDefinedPeriod || moment.tz(dateTime, timezone).hour() < 12
+      ? 'am'
+      : 'pm';
+  const date = moment.tz(dateTime, timezone).format('YYYY-MM-DD');
+  models.sell_prices
+    .upsert({
+      author_id,
+      date,
+      period,
+      price,
+    })
+    .then(() => {
       return message.reply(
-        'you must set your timezone before saving prices. Use `!help set-tz` to learn more!'
+        `your turnip sell price of \`${price}\` ${bell} has been recorded!`
       );
-    }
-    const timezone = res.dataValues.timezone;
-    const dateTime = moment
-      .tz(userDefinedDate || message.createAt, timezone)
-      .format();
-    const period =
-      userDefinedPeriod || moment.tz(dateTime, timezone).hour() < 12
-        ? 'am'
-        : 'pm';
-    const date = moment.tz(dateTime, timezone).format('YYYY-MM-DD');
-    models.sell_prices
-      .upsert({
-        author_id,
-        date,
-        period,
-        price,
-      })
-      .then(() => {
-        return message.reply(
-          `your turnip sell price of \`${price}\` ${bell} has been recorded!`
-        );
-      })
-      .catch((err) => {
-        console.error('Error inserting sell price: ', err);
-        return message.reply(
-          "I wasn't able to save your sell price. Please try again later."
-        );
-      });
-  });
+    })
+    .catch((err) => {
+      console.error('Error inserting sell price: ', err);
+      return message.reply(
+        "I wasn't able to save your sell price. Please try again later."
+      );
+    });
 }

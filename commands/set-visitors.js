@@ -6,8 +6,9 @@ module.exports = {
   description:
     'Sets whether or not you want visitors to your island to buy/sell turnips. Setting to `true` will allow other users to view your prices and username.',
   args: true,
+  requiresTimezone: true,
   usage: '<boolean>',
-  execute(message, args) {
+  execute(message, args, timezone) {
     const author_id = message.author.id;
     const allow_visitors = args[0];
     if (
@@ -17,6 +18,7 @@ module.exports = {
       models.user_settings
         .upsert({
           author_id,
+          timezone,
           allow_visitors,
         })
         .then(() => {

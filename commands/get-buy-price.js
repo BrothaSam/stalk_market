@@ -17,6 +17,9 @@ module.exports = {
         },
       })
       .then((res) => {
+        if (res.length === 0) {
+          return message.reply('you do not have any recorded buy prices!');
+        }
         const price = res[0].price;
         const date = moment(res[0].date).format('dddd MMMM Do, YYYY');
         return message.reply(
