@@ -13,6 +13,7 @@ module.exports = {
     const author_id = message.author.id;
     const createdAt = message.createdAt;
     models.user_settings.findByPk(author_id).then((res) => {
+      console.log(res);
       if (res === null) {
         return message.reply(
           'you must set your timezone before getting prices. Use `!help set-tz` to learn more!'
@@ -36,6 +37,7 @@ module.exports = {
           },
         })
         .then((res) => {
+          console.log(res.length);
           if (res.length === 0) {
             return message.reply(
               'you have no recorded sell prices for this week.'
