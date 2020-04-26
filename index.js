@@ -24,7 +24,7 @@ const tempSell = [
 ];
 
 models.sequelize
-  .sync({ force: true })
+  .sync(/*{ force: true }*/)
   .then(() => {
     //DEV ONLY
 /*     models.user_settings
