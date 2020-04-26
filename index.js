@@ -27,7 +27,7 @@ models.sequelize
   .sync({ force: true })
   .then(() => {
     //DEV ONLY
-    models.user_settings
+/*     models.user_settings
       .upsert({
         author_id: '551924397347176550',
         timezone: 'America/Chicago',
@@ -41,7 +41,7 @@ models.sequelize
             price: sell.price,
           });
         });
-      });
+      }); */
     //DEV ONLY ABOVE
 
     const client = new Discord.Client();
