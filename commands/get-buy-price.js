@@ -12,6 +12,9 @@ module.exports = {
       .findAll({
         limit: 1,
         order: [['date', 'DESC']],
+        where: {
+          author_id: message.author.id,
+        },
       })
       .then((res) => {
         const price = res[0].price;
