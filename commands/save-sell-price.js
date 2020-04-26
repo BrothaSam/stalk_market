@@ -13,6 +13,7 @@ module.exports = {
     const author_id = message.author.id;
     const price = args[0];
 
+    console.log('HERe');
     if (args.length === 1 && !isNaN(price)) {
       upsert(author_id, price, message, null, null);
     } else if (args.length === 3) {
