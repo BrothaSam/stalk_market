@@ -2,8 +2,8 @@ const path = require('path');
 
 module.exports = {
   development: {
-    dialect: 'sqlite',
-    storage: path.join(__dirname, '../database/database.sqlite'),
+    dialect: 'postgres',
+    protocol: 'postgres',
     define: {
       freezeTableName: true,
       timestamps: true,
@@ -12,8 +12,8 @@ module.exports = {
     },
   },
   production: {
-    dialect: 'sqlite',
-    storage: path.join(__dirname, '../database/database.sqlite'),
+    dialect: 'postgres',
+    protocol: 'postgres',
     define: {
       freezeTableName: true,
       timestamps: true,

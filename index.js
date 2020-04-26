@@ -6,49 +6,12 @@ const moment = require('moment');
 const models = require('./models');
 require('dotenv').config();
 
-const tempSell = [
-  { date: '2020-04-19', period: 'am', price: 1 },
-  { date: '2020-04-18', period: 'pm', price: 2 },
-  { date: '2020-04-20', period: 'am', price: 123 },
-  { date: '2020-04-20', period: 'pm', price: 124 },
-  { date: '2020-04-21', period: 'am', price: 125 },
-  { date: '2020-04-21', period: 'pm', price: 126 },
-  { date: '2020-04-22', period: 'am', price: 127 },
-  { date: '2020-04-22', period: 'pm', price: 128 },
-  { date: '2020-04-23', period: 'am', price: 129 },
-  { date: '2020-04-23', period: 'pm', price: 130 },
-  { date: '2020-04-24', period: 'am', price: 131 },
-  { date: '2020-04-24', period: 'pm', price: 132 },
-  { date: '2020-04-25', period: 'am', price: 133 },
-  { date: '2020-04-25', period: 'pm', price: 800 },
-];
-
 models.sequelize
-  .sync(/*{ force: true }*/)
+  .sync()
   .then(() => {
-    //DEV ONLY
-    /*     models.user_settings
-      .upsert({
-        author_id: '551924397347176550',
-        timezone: 'America/Chicago',
-      })
-      .then(() => {
-        tempSell.map((sell) => {
-          models.sell_prices.upsert({
-            author_id: '551924397347176550',
-            date: sell.date,
-            period: sell.period,
-            price: sell.price,
-          });
-        });
-      }); */
-    //DEV ONLY ABOVE
-
     const client = new Discord.Client();
-
-    client.commands = new Discord.Collection();
-
     const cooldowns = new Discord.Collection();
+    client.commands = new Discord.Collection();
 
     const commandFiles = fs
       .readdirSync('./commands')
