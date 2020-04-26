@@ -40,7 +40,7 @@ function upsert(author_id, price, message, userDefinedDate, userDefinedPeriod) {
     const timezone = res.dataValues.timezone;
     console.log(timezone);
     const dateTime = moment
-      .tz(userDefinedDate || message.createAt, timezone)
+      .tz(userDefinedDate ? userDefinedDate : message.createAt, timezone)
       .format();
     console.log(moment(dateTime).hour());
     console.log(moment(dateTime).hour() < 12);
