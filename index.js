@@ -7,7 +7,7 @@ const models = require('./models');
 require('dotenv').config();
 
 models.sequelize
-  .sync({ force: process.env.NODE_ENV === 'development' ? true : false })
+  .sync({ force: process.env.NODE_ENV === 'development' ? false : false })
   .then(() => {
     const client = new Discord.Client();
     const cooldowns = new Discord.Collection();
