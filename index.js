@@ -7,7 +7,7 @@ const models = require('./models');
 require('dotenv').config();
 
 models.sequelize
-  .sync({ force: process.env.NODE_ENV === 'development' ? true : false })
+  .sync({ force: process.env.NODE_ENV === 'development' ? false : false })
   .then(() => {
     const client = new Discord.Client();
     const cooldowns = new Discord.Collection();
@@ -36,7 +36,7 @@ models.sequelize
         .split(/ +/);
       const commandName = args.shift().toLowerCase();
 
-      if (!client.commands.has(commandName)) return;
+      //if (!client.commands.has(commandName)) return;
 
       const command =
         client.commands.get(commandName) ||
@@ -83,7 +83,7 @@ models.sequelize
             .then((res) => {
               if (res === null) {
                 return message.reply(
-                  'you must set your timezone before saving prices. Use `!help set-tz` to learn more!'
+                  `you must set your timezone before using \`${command.name}\`. Use \`!help set-tz\` to learn more!`
                 );
               }
               const timezone = res.dataValues.timezone;
@@ -92,7 +92,7 @@ models.sequelize
             .catch((err) => {
               console.error(err);
               return message.reply(
-                `\`${message.content}\` requires you to have a saved timezone, and we had trouble retrieving that. Please try again later.`
+                `\`${message.content}\` requires you to have a saved timezone, and I had trouble retrieving that. Please try again later.`
               );
             });
         } else {

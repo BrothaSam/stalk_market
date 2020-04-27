@@ -1,36 +1,68 @@
 const { improperArguments } = require('../default-responses');
+const { Op } = require('sequelize');
 const moment = require('moment');
 const models = require('../models');
 const { bell } = require('../constants.json');
+const AsciiTable = require('ascii-table');
 
 module.exports = {
   name: 'get-buy-price',
-  description: 'Gets the most recent purchase price.',
+  description:
+    'Gets the most recent purchase price of you, and any mentioned users. Use `@here` or `@everyone` mentions to fetch for enitre guild.',
   args: false,
+  aliases: ['get-buy-prices'],
+  usage: '[mention]',
   execute(message, args) {
+    let users = [];
+
+    const mentions = message.mentions;
+
+    const userMentions = mentions.everyone
+      ? message.guild.members.cache.map((user) => user.user)
+      : mentions.users;
+
+    userMentions.map((user) => {
+      if (message.author.id !== user.id) {
+        users.push({ id: user.id, username: user.username });
+      }
+    });
+
+    users.push({ id: message.author.id, username: message.author.username });
+
     models.buy_prices
       .findAll({
-        limit: 1,
-        order: [['date', 'DESC']],
+        order: [['price', 'DESC']],
         where: {
-          author_id: message.author.id,
+          author_id: {
+            [Op.or]: users.map((user) => user.id),
+          },
         },
       })
       .then((res) => {
         if (res.length === 0) {
-          return message.reply('you do not have any recorded buy prices!');
+          return message.reply(
+            'there are no recorded prices for you, or any mentioned users.'
+          );
         }
-        const price = res[0].price;
-        const date = moment(res[0].date).format('dddd MMMM Do, YYYY');
-        return message.reply(
-          `your most recent purchase price is \`${price}\` ${bell} on \`${date}\`!`
-        );
+        let rows = [];
+        res.map((entry) => {
+          const data = entry.dataValues;
+          const price = data.price;
+          const user = users.find((user) => user.id === data.author_id)
+            .username;
+          const date = data.date;
+          rows.push([price, user, date]);
+        });
+        let table = new AsciiTable().fromJSON({
+          title: `Buy Prices`,
+          heading: ['Price', 'User', 'Date'],
+          rows,
+        });
+
+        return message.reply(`\n\`${table.toString()}\``);
       })
       .catch((err) => {
         console.error('Error retrieving buy price: ', err);
-        return message.reply(
-          "I wasn't able to get your buy price. Please try again later."
-        );
       });
   },
 };

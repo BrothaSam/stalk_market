@@ -16,7 +16,17 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    expires: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
   });
+/* 
+  SellPrice.associate = function (models) {
+    models.sell_prices.belongsTo(models.user_settings, {
+      foreignKey: 'author_id',
+    });
+  }; */
 
   return SellPrice;
 };

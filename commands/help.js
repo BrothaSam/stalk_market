@@ -11,6 +11,9 @@ module.exports = {
     const { commands } = message.client;
 
     if (!args.length) {
+      data.push(
+        "Hey! I'm a bot designed to track Animal Crossing: New Horizons turnip prices. Look at the commands below, set your timezone, and start tracking your stalk market!"
+      );
       data.push("Here's a list of all my commands:");
       data.push(commands.map((command) => `\`${command.name}\``).join(', '));
       data.push(

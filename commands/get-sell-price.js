@@ -7,23 +7,42 @@ const AsciiTable = require('ascii-table');
 
 module.exports = {
   name: 'get-sell-price',
-  description: 'Gets all recorded sell prices for the week.',
+  description: 'Gets recorded sell prices of you, and any mentioned users.',
   args: false,
+  aliases: ['get-sell-prices'],
+  usage: '[mention]',
   requiresTimezone: true,
   execute(message, args, timezone) {
-    const author_id = message.author.id;
+    let users = [];
+
+    const mentions = message.mentions;
+
+    const userMentions = mentions.everyone
+      ? message.guild.members.cache.map((user) => user.user)
+      : mentions.users;
+
+    userMentions.map((user) => {
+      if (message.author.id !== user.id) {
+        users.push({ id: user.id, username: user.username });
+      }
+    });
+
+    users.push({ id: message.author.id, username: message.author.username });
+
     const createdAt = message.createdAt;
     const startOfWeek = moment
       .tz(createdAt, timezone)
       .startOf('week')
-      .add(1, 'day')
+      .add(0, 'day')
       .format('YYYY-MM-DD');
 
     models.sell_prices
       .findAll({
         order: [['date', 'DESC']],
         where: {
-          author_id,
+          author_id: {
+            [Op.or]: users.map((user) => user.id),
+          },
           date: {
             [Op.gte]: startOfWeek,
           },
@@ -32,17 +51,25 @@ module.exports = {
       .then((res) => {
         if (res.length === 0) {
           return message.reply(
-            'you have no recorded sell prices for this week.'
+            'there are no recorded prices for you, or any mentioned users.'
           );
         } else {
           let rows = [];
           res.map((entry) => {
-            rows.push([entry.date, entry.period, entry.price]);
+            const data = entry.dataValues;
+            const price = data.price;
+            const date = data.date;
+            const period = data.period;
+            const user = users.find((user) => user.id === data.author_id)
+              .username;
+            const expireTime = data.expires;
+            const expired = moment().utc().isAfter(expireTime);
+            rows.push([price, date, period, user, expired]);
           });
 
           let table = new AsciiTable().fromJSON({
-            title: `Prices`,
-            heading: ['Date', 'Period', 'Price'],
+            title: `Sell Prices`,
+            heading: ['Price', 'Date', 'Period', 'User', 'Expired'],
             rows,
           });
           return message.reply(`\n\`${table.toString()}\``);
