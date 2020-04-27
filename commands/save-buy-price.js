@@ -8,6 +8,7 @@ module.exports = {
   description:
     'Inserts or overwrites the price you bought turnips for. If only a price is provided then the date is assumed to be your current date based on your set timezone. Optional date can be given in `YYYY-MM-DD` format. Prices from previous week will be removed every Monday.',
   args: true,
+  aliases: ['set-buy-price'],
   requiresTimezone: true,
   usage: '<price> [date]',
   execute(message, args, timezone) {

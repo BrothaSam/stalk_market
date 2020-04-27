@@ -10,6 +10,7 @@ module.exports = {
   description:
     'Gets the most recent purchase price of you, and any mentioned users. Use `@here` or `@everyone` mentions to fetch for enitre guild.',
   args: false,
+  aliases: ['get-buy-prices'],
   usage: '[mention]',
   execute(message, args) {
     let users = [];
@@ -44,12 +45,12 @@ module.exports = {
           );
         }
         let rows = [];
-        res.map((data) => {
-          const values = data.dataValues;
-          const price = values.price;
-          const user = users.find((user) => user.id === values.author_id)
+        res.map((entry) => {
+          const data = entry.dataValues;
+          const price = data.price;
+          const user = users.find((user) => user.id === data.author_id)
             .username;
-          const date = values.date;
+          const date = data.date;
           rows.push([price, user, date]);
         });
         let table = new AsciiTable().fromJSON({

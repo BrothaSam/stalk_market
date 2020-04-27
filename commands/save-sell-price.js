@@ -1,4 +1,4 @@
-const { periods, bell } = require('../constants.json');
+const { periods, bell, expireTimes } = require('../constants.json');
 const { improperArguments } = require('../default-responses');
 const moment = require('moment');
 const models = require('../models');
@@ -8,6 +8,7 @@ module.exports = {
   description:
     'Saves the sell price offered on your island for a given day and period. If only a price is provided then the date and period is assumed to be current time based on your set timezone. Optional date `YYYY-MM-DD` and period `am/pm` can be provided by the user.',
   args: true,
+  aliases: ['set-sell-price'],
   requiresTimezone: true,
   usage: '<price> [<date> <period>]',
   execute(message, args, timezone) {
@@ -47,12 +48,18 @@ function upsert(
       ? 'am'
       : 'pm';
   const date = moment.tz(dateTime, timezone).format('YYYY-MM-DD');
+  const expires = moment
+    .tz(`${date}${expireTimes[period]}`, timezone)
+    .utc()
+    .format();
+  console.log(expires);
   models.sell_prices
     .upsert({
       author_id,
       date,
       period,
       price,
+      expires,
     })
     .then(() => {
       return message.reply(
