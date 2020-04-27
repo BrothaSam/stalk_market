@@ -8,7 +8,7 @@ const AsciiTable = require('ascii-table');
 module.exports = {
   name: 'get-buy-price',
   description:
-    'Gets the most recent purchase price of yourself and any mentioned users. Use `@here` or `@everyone` mentions to fetch for enitre guild.',
+    'Gets the most recent purchase price of you, and any mentioned users. Use `@here` or `@everyone` mentions to fetch for enitre guild.',
   args: false,
   usage: '[mention]',
   execute(message, args) {
